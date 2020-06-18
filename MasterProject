@@ -2,12 +2,14 @@
 #This code is to ... 
 
 #Installation: download the following required packages 
+install.packages("ngram")
 library(dplyr)
 library(tidyverse)
 library(readr)
 library(ggplot2)
 library(timelineR)
 library(lubridate)
+library(ngram)
 
 # Support 
 # if you are having issues, please let me know. You can email: arjanne.dekker@hva.nl
@@ -36,7 +38,6 @@ files_merged <- bind_rows(heards_new, says_new)
 
 unique(files_merged$type_conversation)
 
-
 # Merge the 'clients' and 'files_merged'
 
 # Remove values of ClientId and robotId which aren't Id's 
@@ -54,6 +55,9 @@ unique(files_merged$clientName)
 
 files_merged <- files_merged[!(files_merged$clientName == "Demo2"),]
 files_merged <- files_merged[!(files_merged$clientName == "WELBO_Dev"),]
+
+# Add an index (numeric ID) column 
+files_merged$ID <- seq.int(nrow(files_merged))
 
 # Delete unnecessary dataframes
 remove(clients, heards, heards_new, says, says_new)
@@ -125,8 +129,6 @@ colSums(is.na(df_final))
 
 summary(df_final)
 
-
-
 ## Exploring assumptions (Chapter 5 - Discovering statistics using R)
 
 # Check normally distributed data
@@ -168,17 +170,17 @@ df_final <- df_final[!(df_final$sector == "Education"),]
 
 summary(df_final)
 
-
-## HYPOTHESIS 3 
-mid2 = substr(df_final$createdAt, 17,18)
-df_final <- df_final %>% 
-  mutate(hour_of_the_day = mid2)
-
-mid3 = substr(df_final$createdAt, 1,3)
-df_final <- df_final %>% 
-  mutate(day = mid3)
-
-table1 <- table(df_final$hour_of_the_day, df_final$type_conversation)
-ggplot(table1)
+remove(sector, companysize, robotid, files_merged)
 
 
+df_final$wordcount <- sapply(df_final$text, function(x) length(unlist(strsplit(as.character(x), "\\W+"))))
+df_final$wordcount <- as.numeric(df_final$wordcount)
+
+# the number of seconds per sentence 
+df_final$wordcount <- (df_final$wordcount / 2)
+df_final$wordcount <- as.numeric(df_final$wordcount)
+
+summary(df_final)
+
+# save document on local computer 
+write.csv(df_final, "C:/Users/arjan/Documents/1. HvA - Digital Driven Business/Final-version.csv", row.names = TRUE)
