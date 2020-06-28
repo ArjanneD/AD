@@ -1,5 +1,5 @@
 ### MASTER PROJECT ###
-#This code is to ... 
+#This code is to analyze the interaction data robot Pepper stores.  
 
 #Installation: download the following required packages 
 install.packages("ngram")
@@ -168,11 +168,9 @@ df_final <- df_final[!(df_final$robotId == "5e5fd1490a6de80010d09839"),]
 
 df_final <- df_final[!(df_final$sector == "Education"),]
 
-summary(df_final)
-
 remove(sector, companysize, robotid, files_merged)
 
-
+# Add extra variable for counting the number of seconds per sentence
 df_final$wordcount <- sapply(df_final$text, function(x) length(unlist(strsplit(as.character(x), "\\W+"))))
 df_final$wordcount <- as.numeric(df_final$wordcount)
 
@@ -180,7 +178,6 @@ df_final$wordcount <- as.numeric(df_final$wordcount)
 df_final$wordcount <- (df_final$wordcount / 2)
 df_final$wordcount <- as.numeric(df_final$wordcount)
 
-summary(df_final)
 
 # save document on local computer 
 write.csv(df_final, "C:/Users/arjan/Documents/1. HvA - Digital Driven Business/Final-version.csv", row.names = TRUE)
