@@ -1,5 +1,5 @@
 ### MASTER PROJECT ###
-#This code is to analyze the interaction data robot Pepper stores.  
+#This code is to analyze the interaction data robot Pepper stores. Confidential.
 
 #Installation: download the following required packages 
 install.packages("ngram")
